@@ -29,7 +29,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/products", "/products/*", "/products/health", "/uploads/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ← ADD THIS FIRST
+                        .requestMatchers(HttpMethod.GET, "/products", "/products/**", "/products/health", "/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/products/check-stock").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/products/reduce-stock").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority("ROLE_ADMIN")
@@ -41,6 +42,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
